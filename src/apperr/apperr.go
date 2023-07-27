@@ -1,6 +1,7 @@
 package apperr
 
 const BAD_REQUEST = "BAD_REQUEST"
+const INTERNAL_ERROR = "INTERNAL_SERVER_ERROR"
 
 type AppErr struct {
 	Code    string `json:"code"`

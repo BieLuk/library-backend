@@ -7,11 +7,11 @@ type GetBooksResponse struct {
 }
 
 type GetBookResponse struct {
-	ID          uuid.UUID `json:"id"`
-	Name        string    `json:"name"`
-	Author      string    `json:"author"`
-	ISBN        string    `json:"isbn"`
-	Description *string   `json:"description,omitempty"`
+	ID          *uuid.UUID `json:"id"`
+	Name        string     `json:"name"`
+	Author      string     `json:"author"`
+	ISBN        string     `json:"isbn"`
+	Description *string    `json:"description,omitempty"`
 }
 
 type CreateBookRequest struct {
