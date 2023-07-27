@@ -19,7 +19,9 @@ func runLibraryServer() {
 	if err != nil {
 		panic(fmt.Errorf("error occurred reading config file"))
 	}
-	db.Init(appConfig)
+	if err := db.Init(appConfig); err != nil {
+		panic(fmt.Errorf("error initializing database: %w", err))
+	}
 
 	libServer := &libraryServer{
 		server:         gin.Default(),
