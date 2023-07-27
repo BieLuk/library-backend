@@ -3,15 +3,17 @@ package main
 import (
 	"fmt"
 	"github.com/BieLuk/library-backend/src/config"
-	"github.com/BieLuk/library-backend/src/controller"
+	"github.com/BieLuk/library-backend/src/controller/book"
 	"github.com/BieLuk/library-backend/src/db"
+	booksRepo "github.com/BieLuk/library-backend/src/repository/books"
+	"github.com/BieLuk/library-backend/src/service/books"
 	"github.com/gin-gonic/gin"
 )
 
 type libraryServer struct {
 	server *gin.Engine
 
-	bookController controller.BookController
+	bookController book.BookController
 }
 
 func runLibraryServer() {
@@ -23,9 +25,12 @@ func runLibraryServer() {
 		panic(fmt.Errorf("error initializing database: %w", err))
 	}
 
+	bookRepository := booksRepo.NewBookRepository()
+	bookService := books.NewBookService(bookRepository)
+
 	libServer := &libraryServer{
 		server:         gin.Default(),
-		bookController: controller.NewBookController(),
+		bookController: book.NewBookController(bookService),
 	}
 
 	libServer.routes()
