@@ -4,16 +4,20 @@ import (
 	"fmt"
 	"github.com/BieLuk/library-backend/src/config"
 	"github.com/BieLuk/library-backend/src/controller/book"
+	"github.com/BieLuk/library-backend/src/controller/borrow"
 	"github.com/BieLuk/library-backend/src/db"
 	booksRepo "github.com/BieLuk/library-backend/src/repository/books"
+	borrowsRepo "github.com/BieLuk/library-backend/src/repository/borrows"
 	"github.com/BieLuk/library-backend/src/service/books"
+	"github.com/BieLuk/library-backend/src/service/borrows"
 	"github.com/gin-gonic/gin"
 )
 
 type libraryServer struct {
 	server *gin.Engine
 
-	bookController book.BookController
+	bookController   book.BookController
+	borrowController borrow.BorrowController
 }
 
 func runLibraryServer() {
@@ -26,11 +30,14 @@ func runLibraryServer() {
 	}
 
 	bookRepository := booksRepo.NewBookRepository()
+	borrowRepository := borrowsRepo.NewBorrowRepository()
 	bookService := books.NewBookService(bookRepository)
+	borrowService := borrows.NewBorrowService(borrowRepository)
 
 	libServer := &libraryServer{
-		server:         gin.Default(),
-		bookController: book.NewBookController(bookService),
+		server:           gin.Default(),
+		bookController:   book.NewBookController(bookService),
+		borrowController: borrow.NewBorrowController(borrowService),
 	}
 
 	libServer.routes()
