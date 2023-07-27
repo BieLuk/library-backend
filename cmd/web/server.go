@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
+	"github.com/BieLuk/library-backend/src/config"
 	"github.com/BieLuk/library-backend/src/controller"
+	"github.com/BieLuk/library-backend/src/db"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,7 +14,12 @@ type libraryServer struct {
 	bookController controller.BookController
 }
 
-func newLibraryServer() *libraryServer {
+func runLibraryServer() {
+	appConfig, err := config.LoadConfig(".")
+	if err != nil {
+		panic(fmt.Errorf("error occurred reading config file"))
+	}
+	db.Init(appConfig)
 
 	libServer := &libraryServer{
 		server:         gin.Default(),
@@ -20,5 +28,7 @@ func newLibraryServer() *libraryServer {
 
 	libServer.routes()
 
-	return libServer
+	if err := libServer.server.Run(fmt.Sprintf(":%s", appConfig.ServerPort)); err != nil {
+		panic(fmt.Errorf("error occurred running library server: %w", err))
+	}
 }
