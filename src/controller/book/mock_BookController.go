@@ -12,6 +12,16 @@ type MockBookController struct {
 	mock.Mock
 }
 
+// CreateBook provides a mock function with given fields: c
+func (_m *MockBookController) CreateBook(c *gin.Context) {
+	_m.Called(c)
+}
+
+// GetBook provides a mock function with given fields: c
+func (_m *MockBookController) GetBook(c *gin.Context) {
+	_m.Called(c)
+}
+
 // GetBooks provides a mock function with given fields: c
 func (_m *MockBookController) GetBooks(c *gin.Context) {
 	_m.Called(c)
