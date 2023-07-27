@@ -15,17 +15,29 @@ type MockBorrowsRepository struct {
 }
 
 // CreateBorrow provides a mock function with given fields: book
-func (_m *MockBorrowsRepository) CreateBorrow(book *model.Borrow) error {
+func (_m *MockBorrowsRepository) CreateBorrow(book *model.Borrow) (*model.Borrow, error) {
 	ret := _m.Called(book)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(*model.Borrow) error); ok {
+	var r0 *model.Borrow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*model.Borrow) (*model.Borrow, error)); ok {
+		return rf(book)
+	}
+	if rf, ok := ret.Get(0).(func(*model.Borrow) *model.Borrow); ok {
 		r0 = rf(book)
 	} else {
-		r0 = ret.Error(0)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*model.Borrow)
+		}
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(*model.Borrow) error); ok {
+		r1 = rf(book)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // GetBorrowByBookID provides a mock function with given fields: bookID

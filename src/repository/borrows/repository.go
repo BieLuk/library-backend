@@ -8,7 +8,7 @@ import (
 )
 
 type BorrowsRepository interface {
-	CreateBorrow(book *model.Borrow) error
+	CreateBorrow(book *model.Borrow) (*model.Borrow, error)
 	GetBorrowByBookID(bookID uuid.UUID) (*model.Borrow, error)
 }
 
@@ -19,11 +19,11 @@ func NewBorrowRepository() *borrowsRepository {
 	return &borrowsRepository{}
 }
 
-func (r *borrowsRepository) CreateBorrow(borrow *model.Borrow) error {
+func (r *borrowsRepository) CreateBorrow(borrow *model.Borrow) (*model.Borrow, error) {
 	if result := db.GetDB().Create(borrow); result.Error != nil {
-		return fmt.Errorf("error creating borrow in database: %w", result.Error)
+		return nil, fmt.Errorf("error creating borrow in database: %w", result.Error)
 	}
-	return nil
+	return borrow, nil
 }
 
 func (r *borrowsRepository) GetBorrowByBookID(bookID uuid.UUID) (*model.Borrow, error) {

@@ -32,7 +32,8 @@ func (s *bookService) CreateBook(request dto.CreateBookRequest) (*dto.CreateBook
 		Description: request.Description,
 	}
 
-	if err := s.bookRepository.CreateBook(bookEntity); err != nil {
+	bookEntity, err := s.bookRepository.CreateBook(bookEntity)
+	if err != nil {
 		return nil, fmt.Errorf("cannot create bookEntity: %w", err)
 	}
 

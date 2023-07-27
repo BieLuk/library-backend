@@ -8,7 +8,7 @@ import (
 )
 
 type BooksRepository interface {
-	CreateBook(book *model.Book) error
+	CreateBook(book *model.Book) (*model.Book, error)
 	GetBooks() ([]*model.Book, error)
 	GetBook(bookID uuid.UUID) (*model.Book, error)
 }
@@ -20,11 +20,11 @@ func NewBookRepository() *booksRepository {
 	return &booksRepository{}
 }
 
-func (r *booksRepository) CreateBook(book *model.Book) error {
+func (r *booksRepository) CreateBook(book *model.Book) (*model.Book, error) {
 	if result := db.GetDB().Create(book); result.Error != nil {
-		return fmt.Errorf("error creating book in database: %w", result.Error)
+		return nil, fmt.Errorf("error creating book in database: %w", result.Error)
 	}
-	return nil
+	return book, nil
 }
 
 func (r *booksRepository) GetBooks() ([]*model.Book, error) {

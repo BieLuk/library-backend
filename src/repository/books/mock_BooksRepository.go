@@ -15,17 +15,29 @@ type MockBooksRepository struct {
 }
 
 // CreateBook provides a mock function with given fields: book
-func (_m *MockBooksRepository) CreateBook(book *model.Book) error {
+func (_m *MockBooksRepository) CreateBook(book *model.Book) (*model.Book, error) {
 	ret := _m.Called(book)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(*model.Book) error); ok {
+	var r0 *model.Book
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*model.Book) (*model.Book, error)); ok {
+		return rf(book)
+	}
+	if rf, ok := ret.Get(0).(func(*model.Book) *model.Book); ok {
 		r0 = rf(book)
 	} else {
-		r0 = ret.Error(0)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*model.Book)
+		}
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(*model.Book) error); ok {
+		r1 = rf(book)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // GetBook provides a mock function with given fields: bookID

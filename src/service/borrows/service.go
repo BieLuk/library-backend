@@ -30,7 +30,8 @@ func (s *borrowService) CreateBorrow(request dto.CreateBorrowRequest) (*dto.Crea
 		BookID:    request.BookID,
 		TakenDate: request.TakenDate,
 	}
-	if err := s.borrowRepository.CreateBorrow(borrowEntity); err != nil {
+	borrowEntity, err := s.borrowRepository.CreateBorrow(borrowEntity)
+	if err != nil {
 		return nil, fmt.Errorf("cannot create borrowEntity: %w", err)
 	}
 
