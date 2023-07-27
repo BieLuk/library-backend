@@ -5,9 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type LibraryServer interface {
-}
-
 type libraryServer struct {
 	server *gin.Engine
 
