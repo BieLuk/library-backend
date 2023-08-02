@@ -2,12 +2,14 @@ package book
 
 import (
 	"fmt"
+	"github.com/BieLuk/library-backend/prometheus"
 	"github.com/BieLuk/library-backend/src/apperr"
 	"github.com/BieLuk/library-backend/src/dto"
 	"github.com/BieLuk/library-backend/src/service/books"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
+	"strconv"
 )
 
 type BookController interface {
@@ -32,12 +34,14 @@ func (bc *bookController) CreateBook(c *gin.Context) {
 	if err := c.BindJSON(&request); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest,
 			apperr.NewAppErr(apperr.BAD_REQUEST, fmt.Sprintf("cannot unmarshall request object: %v", err)))
+		return
 	}
 
 	response, err := bc.bookService.CreateBook(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError,
 			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot create book: %v", err)))
+		return
 	}
 
 	c.JSON(http.StatusOK, response)
@@ -49,6 +53,7 @@ func (bc *bookController) GetBooks(c *gin.Context) {
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError,
 			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot get books: %v", err)))
+		return
 	}
 
 	c.JSON(http.StatusOK, response)
@@ -56,12 +61,22 @@ func (bc *bookController) GetBooks(c *gin.Context) {
 
 // GetBook returns book by given ID
 func (bc *bookController) GetBook(c *gin.Context) {
+
+	var bookName, status string
+
 	ID := uuid.MustParse(c.Param("id"))
 	response, err := bc.bookService.GetBook(ID)
 	if err != nil {
+		bookName = "error"
+		status = strconv.Itoa(http.StatusInternalServerError)
+		prometheus.BookStatus.WithLabelValues(bookName, status).Inc()
 		c.AbortWithStatusJSON(http.StatusInternalServerError,
 			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot get book: %v", err)))
+		return
 	}
 
+	bookName = response.Name
+	status = strconv.Itoa(http.StatusOK)
+	prometheus.BookStatus.WithLabelValues(bookName, status).Inc()
 	c.JSON(http.StatusOK, response)
 }
