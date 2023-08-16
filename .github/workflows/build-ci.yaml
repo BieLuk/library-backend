@@ -18,7 +18,7 @@ jobs:
         run: go build -v ./...
       - name: Run vet & lint
         run: |
-          go vet .
-          golint .
+          go vet ./...
+          golint ./...
       - name: Test
         run: go test
