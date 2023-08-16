@@ -40,4 +40,4 @@ jobs:
           go-version: ${{ env.go_version }}
           cache: false
       - name: Test
-        run: go test
+        run: go test ./...
