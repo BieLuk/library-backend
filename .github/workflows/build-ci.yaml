@@ -16,9 +16,12 @@ jobs:
           go get -u golang.org/x/lint/golint
       - name: Build
         run: go build -v ./...
-      - name: Run vet & lint
+      - name: Run vet
         run: |
           go vet ./...
-          golint ./...
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.53
       - name: Test
         run: go test
