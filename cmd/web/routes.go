@@ -15,7 +15,8 @@ func (s *libraryServer) routes() {
 	borrowsGroup.POST("/", s.borrowController.CreateBorrow)
 	borrowsGroup.GET("/checkBorrow/:id", s.borrowController.IsBookBorrowed)
 
-	s.server.GET("/metrics", prometheusHandler())
+	//s.server.GET("/metrics", prometheusHandler())
+	s.server.GET("/metrics", gin.WrapH(promhttp.Handler()))
 }
 
 func prometheusHandler() gin.HandlerFunc {

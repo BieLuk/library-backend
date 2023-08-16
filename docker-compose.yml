@@ -5,6 +5,8 @@ volumes:
     driver: local
   prometheus-data:
     driver: local
+  postgres-data:
+    driver: local
 services:
   db:
     container_name: db
@@ -13,6 +15,8 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
   api:
     container_name: library-api
     build: .
@@ -40,3 +44,28 @@ services:
       - prometheus-data:/prometheus
     command: "--config.file=/etc/prometheus/prometheus.yml"
     restart: unless-stopped
+  node-exporter:
+    image: prom/node-exporter:v1.6.0
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+  postgres-exporter:
+    container_name: postgres-exporter
+    image: prometheuscommunity/postgres-exporter
+    ports:
+      - "9187:9187"
+    environment:
+      - DATA_SOURCE=postgresql://postgres:postgres@db:5432/postgres?sslmode=disable
+    volumes:
+      - ./prometheus:/etc/prometheus
+    command: "--config.file=/etc/prometheus/postgres_exporter.yml"
+    depends_on:
+      - db
