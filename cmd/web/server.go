@@ -5,7 +5,7 @@ import (
 	"github.com/BieLuk/library-backend/src/config"
 	"github.com/BieLuk/library-backend/src/controller/book"
 	"github.com/BieLuk/library-backend/src/controller/borrow"
-	"github.com/BieLuk/library-backend/src/db"
+	"github.com/BieLuk/library-backend/src/db/postgres"
 	booksRepo "github.com/BieLuk/library-backend/src/repository/books"
 	borrowsRepo "github.com/BieLuk/library-backend/src/repository/borrows"
 	"github.com/BieLuk/library-backend/src/service/books"
@@ -25,12 +25,12 @@ func runLibraryServer() {
 	if err != nil {
 		panic(fmt.Errorf("error occurred reading config file"))
 	}
-	if err := db.Init(appConfig); err != nil {
+	if err := postgres.Init(appConfig); err != nil {
 		panic(fmt.Errorf("error initializing database: %w", err))
 	}
 
-	bookRepository := booksRepo.NewBookRepository()
-	borrowRepository := borrowsRepo.NewBorrowRepository()
+	bookRepository := booksRepo.NewBookPostgresRepository()
+	borrowRepository := borrowsRepo.NewBorrowPostgresRepository()
 	bookService := books.NewBookService(bookRepository)
 	borrowService := borrows.NewBorrowService(borrowRepository)
 
