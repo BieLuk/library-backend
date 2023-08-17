@@ -9,6 +9,8 @@ type Config struct {
 	DBName         string `mapstructure:"DB_NAME"`
 	DBPort         string `mapstructure:"DB_PORT"`
 	ServerPort     string `mapstructure:"SERVER_PORT"`
+	MongoDBName    string `mapstructure:"MONGODB_NAME"`
+	MongoDBURI     string `mapstructure:"MONGODB_URI"`
 }
 
 func LoadConfig(path string) (config Config, err error) {

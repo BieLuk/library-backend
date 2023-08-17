@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/BieLuk/library-backend/src/config"
 	"github.com/BieLuk/library-backend/src/controller/book"
 	"github.com/BieLuk/library-backend/src/controller/borrow"
+	"github.com/BieLuk/library-backend/src/db/mongo"
 	"github.com/BieLuk/library-backend/src/db/postgres"
 	booksRepo "github.com/BieLuk/library-backend/src/repository/books"
 	borrowsRepo "github.com/BieLuk/library-backend/src/repository/borrows"
@@ -26,6 +28,9 @@ func runLibraryServer() {
 		panic(fmt.Errorf("error occurred reading config file"))
 	}
 	if err := postgres.Init(appConfig); err != nil {
+		panic(fmt.Errorf("error initializing postgres database: %w", err))
+	}
+	if err := mongo.Init(context.Background(), appConfig.MongoDBURI, appConfig.MongoDBName); err != nil {
 		panic(fmt.Errorf("error initializing database: %w", err))
 	}
 

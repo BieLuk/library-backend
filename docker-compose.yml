@@ -7,9 +7,11 @@ volumes:
     driver: local
   postgres-data:
     driver: local
+  mongo-data:
+    driver: local
 services:
-  db:
-    container_name: db
+  postgres:
+    container_name: postgres
     image: postgres
     ports:
       - 5432:5432
@@ -17,6 +19,13 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
   api:
     container_name: library-api
     build: .
@@ -25,7 +34,8 @@ services:
     environment:
       - PORT=8080
     depends_on:
-      - db
+      - postgres
+      - mongo
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
@@ -44,28 +54,3 @@ services:
       - prometheus-data:/prometheus
     command: "--config.file=/etc/prometheus/prometheus.yml"
     restart: unless-stopped
-  node-exporter:
-    image: prom/node-exporter:v1.6.0
-    container_name: node-exporter
-    ports:
-      - "9100:9100"
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
-  postgres-exporter:
-    container_name: postgres-exporter
-    image: prometheuscommunity/postgres-exporter
-    ports:
-      - "9187:9187"
-    environment:
-      - DATA_SOURCE=postgresql://postgres:postgres@db:5432/postgres?sslmode=disable
-    volumes:
-      - ./prometheus:/etc/prometheus
-    command: "--config.file=/etc/prometheus/postgres_exporter.yml"
-    depends_on:
-      - db
