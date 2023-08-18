@@ -1,9 +1,9 @@
 package model
 
 type Book struct {
-	DBEntity
-	Name        string
-	Author      string
-	ISBN        string
-	Description *string
+	DBEntity    `bson:",inline"`
+	Name        string  `bson:"name"`
+	Author      string  `bson:"author"`
+	ISBN        string  `bson:"isbn"`
+	Description *string `bson:"description,omitempty"`
 }

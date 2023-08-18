@@ -27,15 +27,23 @@ func runLibraryServer() {
 	if err != nil {
 		panic(fmt.Errorf("error occurred reading config file"))
 	}
-	if err := postgres.Init(appConfig); err != nil {
-		panic(fmt.Errorf("error initializing postgres database: %w", err))
-	}
-	if err := mongo.Init(context.Background(), appConfig.MongoDBURI, appConfig.MongoDBName); err != nil {
-		panic(fmt.Errorf("error initializing database: %w", err))
+
+	var bookRepository booksRepo.BooksRepository
+	var borrowRepository borrowsRepo.BorrowsRepository
+	if config.DatabaseEngine(appConfig.DatabaseEngine) == config.DatabaseEngineMongo {
+		if err := mongo.Init(context.Background(), appConfig.MongoDBURI, appConfig.MongoDBName); err != nil {
+			panic(fmt.Errorf("error initializing database: %w", err))
+		}
+		bookRepository = booksRepo.NewBookMongoRepository(context.Background())
+		borrowRepository = borrowsRepo.NewBorrowMongoRepository(context.Background())
+	} else {
+		if err := postgres.Init(appConfig); err != nil {
+			panic(fmt.Errorf("error initializing postgres database: %w", err))
+		}
+		bookRepository = booksRepo.NewBookPostgresRepository()
+		borrowRepository = borrowsRepo.NewBorrowPostgresRepository()
 	}
 
-	bookRepository := booksRepo.NewBookPostgresRepository()
-	borrowRepository := borrowsRepo.NewBorrowPostgresRepository()
 	bookService := books.NewBookService(bookRepository)
 	borrowService := borrows.NewBorrowService(borrowRepository)
 

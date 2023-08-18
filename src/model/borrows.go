@@ -6,9 +6,9 @@ import (
 )
 
 type Borrow struct {
-	DBEntity
-	BookID      uuid.UUID
-	Book        Book
-	TakenDate   time.Time
-	BroughtDate *time.Time
+	DBEntity    `bson:",inline"`
+	BookID      uuid.UUID  `bson:"book_id"`
+	Book        Book       `bson:",omitempty"`
+	TakenDate   time.Time  `bson:"taken_date"`
+	BroughtDate *time.Time `bson:"brought_date"`
 }
