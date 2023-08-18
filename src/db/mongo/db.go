@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
 	"go.mongodb.org/mongo-driver/bson/bsonrw"
-	"go.mongodb.org/mongo-driver/bson/bsontype"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -70,14 +69,14 @@ func uuidDecodeValue(dc bsoncodec.DecodeContext, vr bsonrw.ValueReader, val refl
 	var subtype byte
 	var err error
 	switch vrType := vr.Type(); vrType {
-	case bsontype.Binary:
+	case bson.TypeBinary:
 		data, subtype, err = vr.ReadBinary()
 		if subtype != uuidSubtype {
 			return fmt.Errorf("unsupported binary subtype %v for UUID", subtype)
 		}
-	case bsontype.Null:
+	case bson.TypeNull:
 		err = vr.ReadNull()
-	case bsontype.Undefined:
+	case bson.TypeUndefined:
 		err = vr.ReadUndefined()
 	default:
 		return fmt.Errorf("cannot decode %v into a UUID", vrType)
