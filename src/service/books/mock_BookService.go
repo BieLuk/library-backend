@@ -40,6 +40,20 @@ func (_m *MockBookService) CreateBook(request dto.CreateBookRequest) (*dto.Creat
 	return r0, r1
 }
 
+// DeleteBook provides a mock function with given fields: ID
+func (_m *MockBookService) DeleteBook(ID uuid.UUID) error {
+	ret := _m.Called(ID)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uuid.UUID) error); ok {
+		r0 = rf(ID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetBook provides a mock function with given fields: ID
 func (_m *MockBookService) GetBook(ID uuid.UUID) (*dto.GetBookResponse, error) {
 	ret := _m.Called(ID)
@@ -90,6 +104,20 @@ func (_m *MockBookService) GetBooks() (*dto.GetBooksResponse, error) {
 	}
 
 	return r0, r1
+}
+
+// UpdateBook provides a mock function with given fields: ID, request
+func (_m *MockBookService) UpdateBook(ID uuid.UUID, request dto.UpdateBookRequest) error {
+	ret := _m.Called(ID, request)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uuid.UUID, dto.UpdateBookRequest) error); ok {
+		r0 = rf(ID, request)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // NewMockBookService creates a new instance of MockBookService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.

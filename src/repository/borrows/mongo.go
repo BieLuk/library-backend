@@ -35,15 +35,32 @@ func (r *borrowsMongoRepository) CreateBorrow(borrow *model.Borrow) (*model.Borr
 	return borrow, nil
 }
 
-func (r *borrowsMongoRepository) GetBorrowByBookID(bookID uuid.UUID) (*model.Borrow, error) {
-	borrow := model.Borrow{}
-	result := r.borrowsCollection.FindOne(r.ctx, bson.M{"book_id": bookID})
-	if result.Err() != nil {
-		return nil, fmt.Errorf("error retrieving borrow from database: %w", result.Err())
-	}
-	if err := result.Decode(&borrow); err != nil {
-		return nil, fmt.Errorf("error decoding result from database: %w", err)
+func (r *borrowsMongoRepository) GetBorrowsByBookID(bookID uuid.UUID) ([]*model.Borrow, error) {
+	var borrows []*model.Borrow
+	filter := bson.M{"book_id": bookID}
+	result, err := r.borrowsCollection.Find(r.ctx, filter)
+	if err != nil {
+		return nil, fmt.Errorf("error retrieving borrow from database: %w", err)
 	}
 
-	return &borrow, nil
+	if err := result.All(r.ctx, &borrows); err != nil {
+		return nil, fmt.Errorf("error marshalling results from DB: %w", err)
+	}
+
+	return borrows, nil
+}
+
+func (r *borrowsMongoRepository) GetBorrowsNotBroughtByBookID(bookID uuid.UUID) ([]*model.Borrow, error) {
+	var borrows []*model.Borrow
+	filter := bson.M{"book_id": bookID, "brought_date": nil}
+	result, err := r.borrowsCollection.Find(r.ctx, filter)
+	if err != nil {
+		return nil, fmt.Errorf("error retrieving borrow from database: %w", err)
+	}
+
+	if err := result.All(r.ctx, &borrows); err != nil {
+		return nil, fmt.Errorf("error marshalling results from DB: %w", err)
+	}
+
+	return borrows, nil
 }

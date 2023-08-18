@@ -10,6 +10,8 @@ func (s *libraryServer) routes() {
 	booksGroup.POST("/", s.bookController.CreateBook)
 	booksGroup.GET("/", s.bookController.GetBooks)
 	booksGroup.GET("/:id", s.bookController.GetBook)
+	booksGroup.PUT("/:id", s.bookController.UpdateBook)
+	booksGroup.DELETE("/:id", s.bookController.DeleteBook)
 
 	borrowsGroup := s.server.Group("/borrows")
 	borrowsGroup.POST("/", s.borrowController.CreateBorrow)

@@ -39,7 +39,7 @@ func (s *borrowService) CreateBorrow(request dto.CreateBorrowRequest) (*dto.Crea
 }
 
 func (s *borrowService) IsBookBorrowed(bookID uuid.UUID) (*dto.IsBookBorrowedResponse, error) {
-	_, err := s.borrowRepository.GetBorrowByBookID(bookID)
+	_, err := s.borrowRepository.GetBorrowsByBookID(bookID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &dto.IsBookBorrowedResponse{IsBorrowed: false}, nil

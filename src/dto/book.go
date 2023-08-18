@@ -24,3 +24,10 @@ type CreateBookRequest struct {
 type CreateBookResponse struct {
 	ID uuid.UUID `json:"id"`
 }
+
+type UpdateBookRequest struct {
+	Name        string  `json:"name"`
+	Author      string  `json:"author"`
+	ISBN        string  `json:"isbn"`
+	Description *string `json:"description,omitempty"`
+}

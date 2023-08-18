@@ -2,20 +2,20 @@ package book
 
 import (
 	"fmt"
-	"github.com/BieLuk/library-backend/prometheus"
 	"github.com/BieLuk/library-backend/src/apperr"
 	"github.com/BieLuk/library-backend/src/dto"
 	"github.com/BieLuk/library-backend/src/service/books"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
-	"strconv"
 )
 
 type BookController interface {
 	CreateBook(c *gin.Context)
 	GetBooks(c *gin.Context)
 	GetBook(c *gin.Context)
+	UpdateBook(c *gin.Context)
+	DeleteBook(c *gin.Context)
 }
 
 type bookController struct {
@@ -61,22 +61,44 @@ func (bc *bookController) GetBooks(c *gin.Context) {
 
 // GetBook returns book by given ID
 func (bc *bookController) GetBook(c *gin.Context) {
-
-	var bookName, status string
-
 	ID := uuid.MustParse(c.Param("id"))
 	response, err := bc.bookService.GetBook(ID)
 	if err != nil {
-		bookName = "error"
-		status = strconv.Itoa(http.StatusInternalServerError)
-		prometheus.BookStatus.WithLabelValues(bookName, status).Inc()
 		c.AbortWithStatusJSON(http.StatusInternalServerError,
 			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot get book: %v", err)))
 		return
 	}
 
-	bookName = response.Name
-	status = strconv.Itoa(http.StatusOK)
-	prometheus.BookStatus.WithLabelValues(bookName, status).Inc()
 	c.JSON(http.StatusOK, response)
+}
+
+func (bc *bookController) UpdateBook(c *gin.Context) {
+	ID := uuid.MustParse(c.Param("id"))
+	var request dto.UpdateBookRequest
+	if err := c.BindJSON(&request); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest,
+			apperr.NewAppErr(apperr.BAD_REQUEST, fmt.Sprintf("cannot unmarshall request object: %v", err)))
+		return
+	}
+	err := bc.bookService.UpdateBook(ID, request)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError,
+			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot update book: %v", err)))
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
+func (bc *bookController) DeleteBook(c *gin.Context) {
+	ID := uuid.MustParse(c.Param("id"))
+
+	err := bc.bookService.DeleteBook(ID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError,
+			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot delete book: %v", err)))
+		return
+	}
+
+	c.Status(http.StatusOK)
 }

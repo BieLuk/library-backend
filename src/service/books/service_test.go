@@ -5,6 +5,7 @@ import (
 	"github.com/BieLuk/library-backend/src/dto"
 	"github.com/BieLuk/library-backend/src/model"
 	"github.com/BieLuk/library-backend/src/repository/books"
+	"github.com/BieLuk/library-backend/src/repository/borrows"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -13,12 +14,13 @@ import (
 
 func TestCreateBook_ErrorBookExists(t *testing.T) {
 	mockBookRepository := books.NewMockBooksRepository(t)
+	mockBorrowsRepository := borrows.NewMockBorrowsRepository(t)
 	mockBookRepository.Mock.On("CreateBook", &model.Book{
 		Name:   "Test Name",
 		Author: "Test Author",
 		ISBN:   "Test ISBN",
 	}).Return(nil, fmt.Errorf("book already exist")).Once()
-	bookService := NewBookService(mockBookRepository)
+	bookService := NewBookService(mockBookRepository, mockBorrowsRepository)
 
 	request := dto.CreateBookRequest{
 		Name:   "Test Name",
@@ -36,6 +38,7 @@ func TestCreateBook_Success(t *testing.T) {
 	createdAt := time.Date(2023, 6, 14, 12, 36, 0, 0, time.UTC)
 	updatedAt := time.Date(2023, 6, 14, 12, 36, 0, 0, time.UTC)
 	mockBookRepository := books.NewMockBooksRepository(t)
+	mockBorrowsRepository := borrows.NewMockBorrowsRepository(t)
 	mockBookRepository.Mock.On("CreateBook", &model.Book{
 		Name:   "Test Name",
 		Author: "Test Author",
@@ -50,7 +53,7 @@ func TestCreateBook_Success(t *testing.T) {
 		Author: "Test Author",
 		ISBN:   "Test ISBN",
 	}, nil).Once()
-	bookService := NewBookService(mockBookRepository)
+	bookService := NewBookService(mockBookRepository, mockBorrowsRepository)
 
 	request := dto.CreateBookRequest{
 		Name:   "Test Name",

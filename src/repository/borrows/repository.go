@@ -7,5 +7,6 @@ import (
 
 type BorrowsRepository interface {
 	CreateBorrow(book *model.Borrow) (*model.Borrow, error)
-	GetBorrowByBookID(bookID uuid.UUID) (*model.Borrow, error)
+	GetBorrowsByBookID(bookID uuid.UUID) ([]*model.Borrow, error)
+	GetBorrowsNotBroughtByBookID(bookID uuid.UUID) ([]*model.Borrow, error)
 }

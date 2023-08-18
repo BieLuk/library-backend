@@ -40,6 +40,20 @@ func (_m *MockBooksRepository) CreateBook(book *model.Book) (*model.Book, error)
 	return r0, r1
 }
 
+// DeleteBook provides a mock function with given fields: bookID
+func (_m *MockBooksRepository) DeleteBook(bookID uuid.UUID) error {
+	ret := _m.Called(bookID)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uuid.UUID) error); ok {
+		r0 = rf(bookID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetBook provides a mock function with given fields: bookID
 func (_m *MockBooksRepository) GetBook(bookID uuid.UUID) (*model.Book, error) {
 	ret := _m.Called(bookID)
@@ -90,6 +104,20 @@ func (_m *MockBooksRepository) GetBooks() ([]*model.Book, error) {
 	}
 
 	return r0, r1
+}
+
+// UpdateBook provides a mock function with given fields: book
+func (_m *MockBooksRepository) UpdateBook(book *model.Book) error {
+	ret := _m.Called(book)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*model.Book) error); ok {
+		r0 = rf(book)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // NewMockBooksRepository creates a new instance of MockBooksRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.

@@ -17,6 +17,11 @@ func (_m *MockBookController) CreateBook(c *gin.Context) {
 	_m.Called(c)
 }
 
+// DeleteBook provides a mock function with given fields: c
+func (_m *MockBookController) DeleteBook(c *gin.Context) {
+	_m.Called(c)
+}
+
 // GetBook provides a mock function with given fields: c
 func (_m *MockBookController) GetBook(c *gin.Context) {
 	_m.Called(c)
@@ -24,6 +29,11 @@ func (_m *MockBookController) GetBook(c *gin.Context) {
 
 // GetBooks provides a mock function with given fields: c
 func (_m *MockBookController) GetBooks(c *gin.Context) {
+	_m.Called(c)
+}
+
+// UpdateBook provides a mock function with given fields: c
+func (_m *MockBookController) UpdateBook(c *gin.Context) {
 	_m.Called(c)
 }
 

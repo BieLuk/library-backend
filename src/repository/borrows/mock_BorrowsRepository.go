@@ -40,20 +40,46 @@ func (_m *MockBorrowsRepository) CreateBorrow(book *model.Borrow) (*model.Borrow
 	return r0, r1
 }
 
-// GetBorrowByBookID provides a mock function with given fields: bookID
-func (_m *MockBorrowsRepository) GetBorrowByBookID(bookID uuid.UUID) (*model.Borrow, error) {
+// GetBorrowsByBookID provides a mock function with given fields: bookID
+func (_m *MockBorrowsRepository) GetBorrowsByBookID(bookID uuid.UUID) ([]*model.Borrow, error) {
 	ret := _m.Called(bookID)
 
-	var r0 *model.Borrow
+	var r0 []*model.Borrow
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uuid.UUID) (*model.Borrow, error)); ok {
+	if rf, ok := ret.Get(0).(func(uuid.UUID) ([]*model.Borrow, error)); ok {
 		return rf(bookID)
 	}
-	if rf, ok := ret.Get(0).(func(uuid.UUID) *model.Borrow); ok {
+	if rf, ok := ret.Get(0).(func(uuid.UUID) []*model.Borrow); ok {
 		r0 = rf(bookID)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*model.Borrow)
+			r0 = ret.Get(0).([]*model.Borrow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uuid.UUID) error); ok {
+		r1 = rf(bookID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetBorrowsNotBroughtByBookID provides a mock function with given fields: bookID
+func (_m *MockBorrowsRepository) GetBorrowsNotBroughtByBookID(bookID uuid.UUID) ([]*model.Borrow, error) {
+	ret := _m.Called(bookID)
+
+	var r0 []*model.Borrow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uuid.UUID) ([]*model.Borrow, error)); ok {
+		return rf(bookID)
+	}
+	if rf, ok := ret.Get(0).(func(uuid.UUID) []*model.Borrow); ok {
+		r0 = rf(bookID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*model.Borrow)
 		}
 	}
 

@@ -6,7 +6,7 @@ import (
 )
 
 type DBEntity struct {
-	ID        *uuid.UUID `gorm:"primaryKey;default:uuid_generate_v4()" bson:"_id"`
-	CreatedAt time.Time  `bson:"created_at"`
-	UpdatedAt time.Time  `bson:"updated_at"`
+	ID        *uuid.UUID `gorm:"primaryKey;default:uuid_generate_v4()" bson:"_id,omitempty"`
+	CreatedAt time.Time  `bson:"created_at,omitempty"`
+	UpdatedAt time.Time  `bson:"updated_at,omitempty"`
 }

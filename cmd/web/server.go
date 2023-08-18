@@ -44,7 +44,7 @@ func runLibraryServer() {
 		borrowRepository = borrowsRepo.NewBorrowPostgresRepository()
 	}
 
-	bookService := books.NewBookService(bookRepository)
+	bookService := books.NewBookService(bookRepository, borrowRepository)
 	borrowService := borrows.NewBorrowService(borrowRepository)
 
 	libServer := &libraryServer{

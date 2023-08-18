@@ -61,3 +61,29 @@ func (r *booksMongoRepository) GetBook(bookID uuid.UUID) (*model.Book, error) {
 
 	return &book, nil
 }
+
+func (r *booksMongoRepository) UpdateBook(book *model.Book) error {
+	book.UpdatedAt = time.Now()
+	_, err := r.booksCollection.UpdateOne(r.ctx, bson.M{"_id": book.ID}, bson.M{
+		"$set": book,
+	})
+	if err != nil {
+		return fmt.Errorf("error updating book: %w", err)
+	}
+	return nil
+}
+
+func (r *booksMongoRepository) DeleteBook(bookID uuid.UUID) error {
+	_, err := r.booksCollection.UpdateOne(r.ctx, bson.M{"_id": bookID}, bson.M{
+		"$set": model.Book{
+			Status: model.BookStatusDeleted,
+			DBEntity: model.DBEntity{
+				ID:        &bookID,
+				UpdatedAt: time.Now(),
+			}},
+	})
+	if err != nil {
+		return fmt.Errorf("error updating book: %w", err)
+	}
+	return nil
+}
