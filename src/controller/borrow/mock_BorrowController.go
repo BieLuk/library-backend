@@ -22,6 +22,11 @@ func (_m *MockBorrowController) IsBookBorrowed(c *gin.Context) {
 	_m.Called(c)
 }
 
+// ReturnBorrowedBook provides a mock function with given fields: c
+func (_m *MockBorrowController) ReturnBorrowedBook(c *gin.Context) {
+	_m.Called(c)
+}
+
 // NewMockBorrowController creates a new instance of MockBorrowController. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockBorrowController(t interface {

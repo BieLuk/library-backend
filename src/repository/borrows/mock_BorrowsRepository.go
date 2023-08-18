@@ -6,6 +6,8 @@ import (
 	model "github.com/BieLuk/library-backend/src/model"
 	mock "github.com/stretchr/testify/mock"
 
+	time "time"
+
 	uuid "github.com/google/uuid"
 )
 
@@ -90,6 +92,20 @@ func (_m *MockBorrowsRepository) GetBorrowsNotBroughtByBookID(bookID uuid.UUID) 
 	}
 
 	return r0, r1
+}
+
+// UpdateBorrowBroughtDateByBookID provides a mock function with given fields: bookID, broughtDate
+func (_m *MockBorrowsRepository) UpdateBorrowBroughtDateByBookID(bookID uuid.UUID, broughtDate time.Time) error {
+	ret := _m.Called(bookID, broughtDate)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uuid.UUID, time.Time) error); ok {
+		r0 = rf(bookID, broughtDate)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // NewMockBorrowsRepository creates a new instance of MockBorrowsRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.

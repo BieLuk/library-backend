@@ -66,6 +66,20 @@ func (_m *MockBorrowService) IsBookBorrowed(bookID uuid.UUID) (*dto.IsBookBorrow
 	return r0, r1
 }
 
+// ReturnBorrowedBook provides a mock function with given fields: bookID
+func (_m *MockBorrowService) ReturnBorrowedBook(bookID uuid.UUID) error {
+	ret := _m.Called(bookID)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uuid.UUID) error); ok {
+		r0 = rf(bookID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewMockBorrowService creates a new instance of MockBorrowService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockBorrowService(t interface {
