@@ -19,6 +19,7 @@ func TestCreateBook_ErrorBookExists(t *testing.T) {
 		Name:   "Test Name",
 		Author: "Test Author",
 		ISBN:   "Test ISBN",
+		Status: model.BookStatusActive,
 	}).Return(nil, fmt.Errorf("book already exist")).Once()
 	bookService := NewBookService(mockBookRepository, mockBorrowsRepository)
 
@@ -43,6 +44,7 @@ func TestCreateBook_Success(t *testing.T) {
 		Name:   "Test Name",
 		Author: "Test Author",
 		ISBN:   "Test ISBN",
+		Status: model.BookStatusActive,
 	}).Return(&model.Book{
 		DBEntity: model.DBEntity{
 			ID:        &responseID,
@@ -52,6 +54,7 @@ func TestCreateBook_Success(t *testing.T) {
 		Name:   "Test Name",
 		Author: "Test Author",
 		ISBN:   "Test ISBN",
+		Status: model.BookStatusActive,
 	}, nil).Once()
 	bookService := NewBookService(mockBookRepository, mockBorrowsRepository)
 
