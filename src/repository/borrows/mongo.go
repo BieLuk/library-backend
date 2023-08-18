@@ -64,3 +64,19 @@ func (r *borrowsMongoRepository) GetBorrowsNotBroughtByBookID(bookID uuid.UUID) 
 
 	return borrows, nil
 }
+
+func (r *borrowsMongoRepository) UpdateBorrowBroughtDateByBookID(bookID uuid.UUID, broughtDate time.Time) error {
+	_, err := r.borrowsCollection.UpdateOne(r.ctx, bson.M{"book_id": bookID}, bson.M{
+		"$set": model.Borrow{
+			BroughtDate: &broughtDate,
+			BookID:      bookID,
+			DBEntity: model.DBEntity{
+				UpdatedAt: time.Now(),
+			}},
+	})
+	if err != nil {
+		return fmt.Errorf("error updating borrow: %w", err)
+	}
+	return nil
+
+}

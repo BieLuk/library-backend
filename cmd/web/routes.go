@@ -16,6 +16,7 @@ func (s *libraryServer) routes() {
 	borrowsGroup := s.server.Group("/borrows")
 	borrowsGroup.POST("/", s.borrowController.CreateBorrow)
 	borrowsGroup.GET("/checkBorrow/:id", s.borrowController.IsBookBorrowed)
+	borrowsGroup.PUT("/returnBorrow/:id", s.borrowController.ReturnBorrowedBook)
 
 	s.server.GET("/metrics", gin.WrapH(promhttp.Handler()))
 }

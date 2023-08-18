@@ -5,6 +5,7 @@ import (
 	"github.com/BieLuk/library-backend/src/db/postgres"
 	"github.com/BieLuk/library-backend/src/model"
 	"github.com/google/uuid"
+	"time"
 )
 
 type borrowsPostgresRepository struct {
@@ -44,4 +45,14 @@ func (r *borrowsPostgresRepository) GetBorrowsNotBroughtByBookID(bookID uuid.UUI
 		return nil, fmt.Errorf("error retrieving borrows from database: %w", result.Error)
 	}
 	return borrows, nil
+}
+
+func (r *borrowsPostgresRepository) UpdateBorrowBroughtDateByBookID(bookID uuid.UUID, broughtDate time.Time) error {
+	if result := postgres.GetDB().Model(&model.Borrow{}).
+		Where("book_id = ?", bookID).
+		Update("brought_date", broughtDate); result.Error != nil {
+		return fmt.Errorf("error updating borrow: %w", result.Error)
+	}
+
+	return nil
 }

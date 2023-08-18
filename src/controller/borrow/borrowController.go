@@ -13,6 +13,7 @@ import (
 type BorrowController interface {
 	CreateBorrow(c *gin.Context)
 	IsBookBorrowed(c *gin.Context)
+	ReturnBorrowedBook(c *gin.Context)
 }
 
 type borrowController struct {
@@ -52,4 +53,14 @@ func (bc *borrowController) IsBookBorrowed(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, response)
+}
+
+func (bc *borrowController) ReturnBorrowedBook(c *gin.Context) {
+	bookID := uuid.MustParse(c.Param("id"))
+	if err := bc.borrowService.ReturnBorrowedBook(bookID); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError,
+			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot return borrowed book: %v", err)))
+	}
+
+	c.Status(http.StatusOK)
 }
