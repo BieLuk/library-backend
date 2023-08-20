@@ -30,7 +30,7 @@ func NewBorrowController(borrowService borrows.BorrowService) *borrowController 
 // CreateBorrow creates model.Borrow object in database
 func (bc *borrowController) CreateBorrow(c *gin.Context) {
 	var request dto.CreateBorrowRequest
-	if err := validate.BindAndValidateAny(c, &request); err != nil {
+	if err := validate.BindAndValidateJson(c, &request); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest,
 			apperr.NewAppErr(apperr.BAD_REQUEST, fmt.Sprintf("cannot unmarshall request object: %v", err)))
 		return
@@ -61,7 +61,7 @@ func (bc *borrowController) IsBookBorrowed(c *gin.Context) {
 
 func (bc *borrowController) ReturnBorrowedBook(c *gin.Context) {
 	var request dto.ReturnBorrowRequest
-	if err := validate.BindAndValidateAny(c, &request); err != nil {
+	if err := validate.BindAndValidateJson(c, &request); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest,
 			apperr.NewAppErr(apperr.BAD_REQUEST, fmt.Sprintf("cannot unmarshall request object: %v", err)))
 		return

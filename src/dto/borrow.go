@@ -19,5 +19,5 @@ type CreateBorrowResponse struct {
 }
 
 type ReturnBorrowRequest struct {
-	BookID uuid.UUID `json:"book_id" validate:"required"`
+	BookID uuid.UUID `json:"bookId" validate:"required"`
 }

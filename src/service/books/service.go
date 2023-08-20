@@ -55,7 +55,7 @@ func (s *bookService) GetBooks() (*dto.GetBooksResponse, error) {
 	response := dto.GetBooksResponse{}
 	for _, book := range books {
 		response.Books = append(response.Books, dto.GetBookResponse{
-			ID:          book.ID,
+			ID:          *book.ID,
 			Name:        book.Name,
 			Author:      book.Author,
 			ISBN:        book.ISBN,
@@ -73,7 +73,7 @@ func (s *bookService) GetBook(bookID uuid.UUID) (*dto.GetBookResponse, error) {
 	}
 
 	return &dto.GetBookResponse{
-		ID:          book.ID,
+		ID:          *book.ID,
 		Name:        book.Name,
 		Author:      book.Author,
 		ISBN:        book.ISBN,

@@ -12,8 +12,12 @@ func Init() {
 	Validate = validator.New()
 }
 
-func BindAndValidateAny(c *gin.Context, obj any) error {
-	if err := c.Bind(&obj); err != nil {
+func BindAndValidateJson(c *gin.Context, obj any) error {
+	if Validate == nil {
+		Init()
+	}
+
+	if err := c.ShouldBindJSON(&obj); err != nil {
 		return fmt.Errorf("error binding object: %w", err)
 	}
 
