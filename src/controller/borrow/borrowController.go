@@ -56,8 +56,13 @@ func (bc *borrowController) IsBookBorrowed(c *gin.Context) {
 }
 
 func (bc *borrowController) ReturnBorrowedBook(c *gin.Context) {
-	bookID := uuid.MustParse(c.Param("id"))
-	if err := bc.borrowService.ReturnBorrowedBook(bookID); err != nil {
+	var request dto.ReturnBorrowRequest
+	if err := c.BindJSON(&request); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest,
+			apperr.NewAppErr(apperr.BAD_REQUEST, fmt.Sprintf("cannot unmarshall request object: %v", err)))
+	}
+
+	if err := bc.borrowService.ReturnBorrowedBook(request.BookID); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError,
 			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot return borrowed book: %v", err)))
 	}
