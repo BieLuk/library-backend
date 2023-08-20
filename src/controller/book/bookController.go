@@ -5,6 +5,7 @@ import (
 	"github.com/BieLuk/library-backend/src/apperr"
 	"github.com/BieLuk/library-backend/src/dto"
 	"github.com/BieLuk/library-backend/src/service/books"
+	"github.com/BieLuk/library-backend/src/validate"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
@@ -31,7 +32,7 @@ func NewBookController(bookService books.BookService) *bookController {
 // CreateBook creates model.Book object in database
 func (bc *bookController) CreateBook(c *gin.Context) {
 	var request dto.CreateBookRequest
-	if err := c.BindJSON(&request); err != nil {
+	if err := validate.BindAndValidateAny(c, &request); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest,
 			apperr.NewAppErr(apperr.BAD_REQUEST, fmt.Sprintf("cannot unmarshall request object: %v", err)))
 		return

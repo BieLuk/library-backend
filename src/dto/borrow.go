@@ -10,8 +10,8 @@ type IsBookBorrowedResponse struct {
 }
 
 type CreateBorrowRequest struct {
-	BookID    uuid.UUID `json:"bookId"`
-	TakenDate time.Time `json:"takenDate"`
+	BookID    uuid.UUID `json:"bookId" validate:"required,uuid4"`
+	TakenDate time.Time `json:"takenDate" validate:"required"`
 }
 
 type CreateBorrowResponse struct {

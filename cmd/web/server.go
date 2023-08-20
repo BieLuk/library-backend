@@ -12,6 +12,7 @@ import (
 	borrowsRepo "github.com/BieLuk/library-backend/src/repository/borrows"
 	"github.com/BieLuk/library-backend/src/service/books"
 	"github.com/BieLuk/library-backend/src/service/borrows"
+	"github.com/BieLuk/library-backend/src/validate"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,6 +28,7 @@ func runLibraryServer() {
 	if err != nil {
 		panic(fmt.Errorf("error occurred reading config file"))
 	}
+	validate.Init()
 
 	var bookRepository booksRepo.BooksRepository
 	var borrowRepository borrowsRepo.BorrowsRepository

@@ -15,10 +15,10 @@ type GetBookResponse struct {
 }
 
 type CreateBookRequest struct {
-	Name        string  `json:"name"`
-	Author      string  `json:"author"`
-	ISBN        string  `json:"isbn"`
-	Description *string `json:"description,omitempty"`
+	Name        string  `json:"name" validate:"required,max=255"`
+	Author      string  `json:"author" validate:"required,max=255"`
+	ISBN        string  `json:"isbn" validate:"required,len=13,number"`
+	Description *string `json:"description,omitempty" validate:"omitempty,max=255"`
 }
 
 type CreateBookResponse struct {
@@ -26,8 +26,8 @@ type CreateBookResponse struct {
 }
 
 type UpdateBookRequest struct {
-	Name        string  `json:"name"`
-	Author      string  `json:"author"`
-	ISBN        string  `json:"isbn"`
-	Description *string `json:"description,omitempty"`
+	Name        string  `json:"name" validate:"required,max=255"`
+	Author      string  `json:"author" validate:"required,max=255"`
+	ISBN        string  `json:"isbn" validate:"required,len=13,number"`
+	Description *string `json:"description,omitempty" validate:"omitempty,max=255"`
 }
