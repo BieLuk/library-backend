@@ -76,7 +76,7 @@ func (bc *bookController) GetBook(c *gin.Context) {
 func (bc *bookController) UpdateBook(c *gin.Context) {
 	ID := uuid.MustParse(c.Param("id"))
 	var request dto.UpdateBookRequest
-	if err := c.BindJSON(&request); err != nil {
+	if err := validate.BindAndValidateAny(c, &request); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest,
 			apperr.NewAppErr(apperr.BAD_REQUEST, fmt.Sprintf("cannot unmarshall request object: %v", err)))
 		return

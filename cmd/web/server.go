@@ -47,7 +47,7 @@ func runLibraryServer() {
 	}
 
 	bookService := books.NewBookService(bookRepository, borrowRepository)
-	borrowService := borrows.NewBorrowService(borrowRepository)
+	borrowService := borrows.NewBorrowService(borrowRepository, bookRepository)
 
 	libServer := &libraryServer{
 		server:           gin.Default(),

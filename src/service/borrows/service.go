@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/BieLuk/library-backend/src/dto"
 	"github.com/BieLuk/library-backend/src/model"
+	"github.com/BieLuk/library-backend/src/repository/books"
 	"github.com/BieLuk/library-backend/src/repository/borrows"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,15 +21,20 @@ type BorrowService interface {
 
 type borrowService struct {
 	borrowRepository borrows.BorrowsRepository
+	bookRepository   books.BooksRepository
 }
 
-func NewBorrowService(borrowRepository borrows.BorrowsRepository) *borrowService {
+func NewBorrowService(borrowRepository borrows.BorrowsRepository, bookRepository books.BooksRepository) *borrowService {
 	return &borrowService{
 		borrowRepository: borrowRepository,
+		bookRepository:   bookRepository,
 	}
 }
 
 func (s *borrowService) CreateBorrow(request dto.CreateBorrowRequest) (*dto.CreateBorrowResponse, error) {
+	if _, err := s.bookRepository.GetBook(request.BookID); err != nil {
+		return nil, fmt.Errorf("error getting book: %v: %w", request.BookID, err)
+	}
 	borrowEntity := &model.Borrow{
 		BookID:    request.BookID,
 		TakenDate: request.TakenDate,

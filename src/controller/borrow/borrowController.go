@@ -5,6 +5,7 @@ import (
 	"github.com/BieLuk/library-backend/src/apperr"
 	"github.com/BieLuk/library-backend/src/dto"
 	"github.com/BieLuk/library-backend/src/service/borrows"
+	"github.com/BieLuk/library-backend/src/validate"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
@@ -29,15 +30,17 @@ func NewBorrowController(borrowService borrows.BorrowService) *borrowController 
 // CreateBorrow creates model.Borrow object in database
 func (bc *borrowController) CreateBorrow(c *gin.Context) {
 	var request dto.CreateBorrowRequest
-	if err := c.BindJSON(&request); err != nil {
+	if err := validate.BindAndValidateAny(c, &request); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest,
 			apperr.NewAppErr(apperr.BAD_REQUEST, fmt.Sprintf("cannot unmarshall request object: %v", err)))
+		return
 	}
 
 	response, err := bc.borrowService.CreateBorrow(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError,
 			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot create borrow: %v", err)))
+		return
 	}
 
 	c.JSON(http.StatusOK, response)
@@ -50,6 +53,7 @@ func (bc *borrowController) IsBookBorrowed(c *gin.Context) {
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError,
 			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot check if books is borrowed: %v", err)))
+		return
 	}
 
 	c.JSON(http.StatusOK, response)
@@ -57,14 +61,16 @@ func (bc *borrowController) IsBookBorrowed(c *gin.Context) {
 
 func (bc *borrowController) ReturnBorrowedBook(c *gin.Context) {
 	var request dto.ReturnBorrowRequest
-	if err := c.BindJSON(&request); err != nil {
+	if err := validate.BindAndValidateAny(c, &request); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest,
 			apperr.NewAppErr(apperr.BAD_REQUEST, fmt.Sprintf("cannot unmarshall request object: %v", err)))
+		return
 	}
 
 	if err := bc.borrowService.ReturnBorrowedBook(request.BookID); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError,
 			apperr.NewAppErr(apperr.INTERNAL_ERROR, fmt.Sprintf("cannot return borrowed book: %v", err)))
+		return
 	}
 
 	c.Status(http.StatusOK)
