@@ -3,7 +3,9 @@ This repo contains Golang library backend REST API using Gin framework.
 This simple application uses Viper library for handling configuration, Gorm as sql ORM for postgresql and goose as migration tool.
 </br>
 Application has implemented repository for Postgresql and Mongo DB.
+</br>
 Application is containerised with docker-compose.
+
 Application endpoints are documented and accessible under URL: `http://"host":"port"/swagger/index.html#/`
 
 To run application:
