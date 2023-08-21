@@ -1,0 +1,294 @@
+definitions:
+  apperr.AppErr:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+  dto.CreateBookRequest:
+    properties:
+      author:
+        maxLength: 255
+        type: string
+      description:
+        maxLength: 255
+        type: string
+      isbn:
+        type: string
+      name:
+        maxLength: 255
+        type: string
+    required:
+    - author
+    - isbn
+    - name
+    type: object
+  dto.CreateBookResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  dto.CreateBorrowRequest:
+    properties:
+      bookId:
+        type: string
+      takenDate:
+        type: string
+    required:
+    - bookId
+    - takenDate
+    type: object
+  dto.CreateBorrowResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  dto.GetBookResponse:
+    properties:
+      author:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      isbn:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.GetBooksResponse:
+    properties:
+      books:
+        items:
+          $ref: '#/definitions/dto.GetBookResponse'
+        type: array
+    type: object
+  dto.IsBookBorrowedResponse:
+    properties:
+      isBorrowed:
+        type: boolean
+    type: object
+  dto.ReturnBorrowRequest:
+    properties:
+      bookId:
+        type: string
+    required:
+    - bookId
+    type: object
+  dto.UpdateBookRequest:
+    properties:
+      author:
+        maxLength: 255
+        type: string
+      description:
+        maxLength: 255
+        type: string
+      isbn:
+        type: string
+      name:
+        maxLength: 255
+        type: string
+    required:
+    - author
+    - isbn
+    - name
+    type: object
+info:
+  contact: {}
+paths:
+  /books/:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all books in library
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetBooksResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperr.AppErr'
+      summary: Get all books
+      tags:
+      - Books
+    post:
+      consumes:
+      - application/json
+      description: Create book
+      parameters:
+      - description: createBookRequest
+        in: body
+        name: createBookRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateBookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CreateBookResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperr.AppErr'
+      summary: Create book
+      tags:
+      - Books
+  /books/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete book
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperr.AppErr'
+      summary: Delete book
+      tags:
+      - Books
+    get:
+      consumes:
+      - application/json
+      description: Get single book by given id
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetBookResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperr.AppErr'
+      summary: Get book by id
+      tags:
+      - Books
+    put:
+      consumes:
+      - application/json
+      description: Update book data
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: updateBookRequest
+        in: body
+        name: updateBookRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateBookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperr.AppErr'
+      summary: Update book
+      tags:
+      - Books
+  /borrows/:
+    post:
+      consumes:
+      - application/json
+      description: Creates borrow of given book
+      parameters:
+      - description: createBorrowRequest
+        in: body
+        name: createBorrowRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateBorrowRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CreateBorrowResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperr.AppErr'
+      summary: Create borrow
+      tags:
+      - Borrows
+  /borrows/check/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Checks if book with given id is already borrowed
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.IsBookBorrowedResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperr.AppErr'
+      summary: Checks if book with given id is already borrowed
+      tags:
+      - Borrows
+  /borrows/return/:
+    put:
+      consumes:
+      - application/json
+      description: Updates broughtDate field for borrow with given book id
+      parameters:
+      - description: returnBorrowRequest
+        in: body
+        name: returnBorrowRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReturnBorrowRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperr.AppErr'
+      summary: Updates broughtDate field for borrow with given book id
+      tags:
+      - Borrows
+swagger: "2.0"

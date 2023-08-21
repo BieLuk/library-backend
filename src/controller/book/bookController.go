@@ -30,6 +30,15 @@ func NewBookController(bookService books.BookService) *bookController {
 }
 
 // CreateBook creates model.Book object in database
+// @Summary      Create book
+// @Description  Create book
+// @Tags         Books
+// @Accept       json
+// @Produce      json
+// @Param        createBookRequest body dto.CreateBookRequest true "createBookRequest"
+// @Success      200  {object}  dto.CreateBookResponse
+// @Failure      400  {object}  apperr.AppErr
+// @Router       /books/ [post]
 func (bc *bookController) CreateBook(c *gin.Context) {
 	var request dto.CreateBookRequest
 	if err := validate.BindAndValidateJson(c, &request); err != nil {
@@ -49,6 +58,14 @@ func (bc *bookController) CreateBook(c *gin.Context) {
 }
 
 // GetBooks returns list of all books in library
+// @Summary      Get all books
+// @Description  Get list of all books in library
+// @Tags         Books
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  dto.GetBooksResponse
+// @Failure      400  {object}  apperr.AppErr
+// @Router       /books/ [get]
 func (bc *bookController) GetBooks(c *gin.Context) {
 	response, err := bc.bookService.GetBooks()
 	if err != nil {
@@ -61,6 +78,15 @@ func (bc *bookController) GetBooks(c *gin.Context) {
 }
 
 // GetBook returns book by given ID
+// @Summary      Get book by id
+// @Description  Get single book by given id
+// @Tags         Books
+// @Accept       json
+// @Produce      json
+// @Param        id   path string  true  "Book ID"
+// @Success      200  {object}  dto.GetBookResponse
+// @Failure      400  {object}  apperr.AppErr
+// @Router       /books/{id} [get]
 func (bc *bookController) GetBook(c *gin.Context) {
 	ID := uuid.MustParse(c.Param("id"))
 	response, err := bc.bookService.GetBook(ID)
@@ -73,6 +99,17 @@ func (bc *bookController) GetBook(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// UpdateBook updates book data
+// @Summary      Update book
+// @Description  Update book data
+// @Tags         Books
+// @Accept       json
+// @Produce      json
+// @Param        id   path string  true  "Book ID"
+// @Param        updateBookRequest body dto.UpdateBookRequest true "updateBookRequest"
+// @Success      200
+// @Failure      400  {object}  apperr.AppErr
+// @Router       /books/{id} [put]
 func (bc *bookController) UpdateBook(c *gin.Context) {
 	ID := uuid.MustParse(c.Param("id"))
 	var request dto.UpdateBookRequest
@@ -91,6 +128,16 @@ func (bc *bookController) UpdateBook(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
+// DeleteBook deletes book
+// @Summary      Delete book
+// @Description  Delete book
+// @Tags         Books
+// @Accept       json
+// @Produce      json
+// @Param        id   path string  true  "Book ID"
+// @Success      200
+// @Failure      400  {object}  apperr.AppErr
+// @Router       /books/{id} [delete]
 func (bc *bookController) DeleteBook(c *gin.Context) {
 	ID := uuid.MustParse(c.Param("id"))
 

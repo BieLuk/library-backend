@@ -14,6 +14,8 @@ import (
 	"github.com/BieLuk/library-backend/src/service/borrows"
 	"github.com/BieLuk/library-backend/src/validate"
 	"github.com/gin-gonic/gin"
+
+	_ "github.com/BieLuk/library-backend/swagger"
 )
 
 type libraryServer struct {

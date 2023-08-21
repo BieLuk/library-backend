@@ -28,6 +28,15 @@ func NewBorrowController(borrowService borrows.BorrowService) *borrowController 
 }
 
 // CreateBorrow creates model.Borrow object in database
+// @Summary      Create borrow
+// @Description  Creates borrow of given book
+// @Tags         Borrows
+// @Accept       json
+// @Produce      json
+// @Param        createBorrowRequest body dto.CreateBorrowRequest true "createBorrowRequest"
+// @Success      200  {object}  dto.CreateBorrowResponse
+// @Failure      400  {object}  apperr.AppErr
+// @Router       /borrows/ [post]
 func (bc *borrowController) CreateBorrow(c *gin.Context) {
 	var request dto.CreateBorrowRequest
 	if err := validate.BindAndValidateJson(c, &request); err != nil {
@@ -47,6 +56,15 @@ func (bc *borrowController) CreateBorrow(c *gin.Context) {
 }
 
 // IsBookBorrowed checks if book with given ID is borrowed
+// @Summary      Checks if book with given id is already borrowed
+// @Description  Checks if book with given id is already borrowed
+// @Tags         Borrows
+// @Accept       json
+// @Produce      json
+// @Param        id   path string  true  "Book ID"
+// @Success      200  {object}  dto.IsBookBorrowedResponse
+// @Failure      400  {object}  apperr.AppErr
+// @Router       /borrows/check/{id} [get]
 func (bc *borrowController) IsBookBorrowed(c *gin.Context) {
 	bookID := uuid.MustParse(c.Param("id"))
 	response, err := bc.borrowService.IsBookBorrowed(bookID)
@@ -59,6 +77,16 @@ func (bc *borrowController) IsBookBorrowed(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// ReturnBorrowedBook updates brought_date field for borrow with given book id
+// @Summary      Updates broughtDate field for borrow with given book id
+// @Description  Updates broughtDate field for borrow with given book id
+// @Tags         Borrows
+// @Accept       json
+// @Produce      json
+// @Param        returnBorrowRequest body dto.ReturnBorrowRequest true "returnBorrowRequest"
+// @Success      200
+// @Failure      400  {object}  apperr.AppErr
+// @Router       /borrows/return/ [put]
 func (bc *borrowController) ReturnBorrowedBook(c *gin.Context) {
 	var request dto.ReturnBorrowRequest
 	if err := validate.BindAndValidateJson(c, &request); err != nil {
