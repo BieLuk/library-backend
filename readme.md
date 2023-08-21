@@ -4,6 +4,7 @@ This simple application uses Viper library for handling configuration, Gorm as s
 </br>
 Application has implemented repository for Postgresql and Mongo DB.
 Application is containerised with docker-compose.
+Application endpoints are documented and accessible under URL: http://"host":"port"/swagger/index.html#/
 
 To run application:
 1. Set env variables, defaults are in `app.env` file, set `DATABASE_ENGINE` variable to `POSTGRES` or `MONGO` to use database you want.
